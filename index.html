@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Expires" content="Fri, Jan 01 1900 00:00:00 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Lang" content="en">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Test API</title>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+</head>
+<body>
+
+	<style>
+	label { 
+		display: inline-block;
+		width: 120px;
+	}
+	.form {
+		margin-bottom: 30px;
+		line-height: 30px;;
+	}
+	</style>
+
+	<label for="target">Target</label>
+	<select id="target">
+		<option value="product">product</option>
+		<option value="category">category</option>
+	</select>
+	<br><br>
+	
+	<label for="action">Action</label>
+	<select id="action"> 
+		<option value="create">create</option>
+		<option value="read" selected>read</option>
+		<option value="update">update</option>
+		<option value="delete">delete</option>
+	</select>
+	<br><br><br>
+
+	<div id="product-create" class="form" style="display:none">
+		<label>category_id</label> <input type="text" id="product-create-category-id"><br>
+		<label>name</label> <input type="text" id="product-create-name"><br>
+		<label>decription</label> <input type="text" id="product-create-decription"><br>
+		<label>price</label> <input type="text" id="product-create-price">
+	</div>
+
+	<div id="product-read" class="form" style="display:none">	
+		<label>where id =</label> <input type="text" id="product-read-id"><br>
+		<label>or category_id =</label> <input type="text" id="product-read-category-id">
+	</div>
+
+	<div id="product-update" class="form" style="display:none">
+		<label>name</label> <input type="text" id="product-update-name"><br>
+		<label>decription</label> <input type="text" id="product-update-decription"><br>
+		<label>price</label> <input type="text" id="product-update-price"><br>
+		<label>where id =</label> <input type="text" id="product-update-product-id">
+	</div>
+
+	<div id="product-delete" class="form" style="display:none">
+		<label>where id =</label> <input type="text" id="product-delete-product-id"><br>
+	</div>
+	
+	<div id="category-create" class="form" style="display:none">
+		<label>parent_id</label> <input type="text" id="category-create-parent-id"><br>
+		<label>name</label> <input type="text" id="category-create-name"><br>
+		<label>decription</label> <input type="text" id="category-create-decription"><br>
+	</div>
+
+	<div id="category-read" class="form" style="display:none">	
+		<label>where parent_id =</label> <input type="text" id="category-read-parent-id"><br>
+		<label>or category_id =</label> <input type="text" id="category-read-category-id">
+	</div>
+
+	<div id="category-update" class="form" style="display:none">
+		<label>name</label> <input type="text" id="category-update-name"><br>
+		<label>decription</label> <input type="text" id="category-update-decription"><br>
+		<label>where id =</label> <input type="text" id="category-update-category-id">
+	</div>
+
+	<div id="category-delete" class="form" style="display:none">
+		<label>where id =</label> <input type="text" id="category-delete-category-id"><br>
+	</div>
+	
+	<button id="send">Send</button>
+	
+	<script>
+	$(document).ready(function(){
+		var $target = $('#target'),
+			$action = $('#action');
+			
+		$('#target, #action').change(function(){
+			
+			var ta = $target.val() + '-' + $action.val();
+			
+			$('.form').hide();	
+			$('#' + ta).show(); 
+		}).change();
+		
+		$('#send').click(function(){
+			
+			var ta = $target.val() + '-' + $action.val(),
+				data = {'auth_key': '81026189732462938470129874012934', 'target': $target.val(), 'action': $action.val()};
+			
+			switch(ta) {
+				case 'product-create':
+					data.category_id = $('#product-create-category-id').val();
+					data.name = $('#product-create-name').val();
+					data.description = $('#product-create-description').val();
+					data.price = $('#product-create-price').val();
+					break;
+				case 'product-read':
+					data.product_id = $('#product-read-id').val();
+					data.category_id = $('#product-read-category-id').val();
+					break;
+				case 'product-update':
+					data.name = $('#product-update-name').val();
+					data.description = $('#product-update-description').val();
+					data.price = $('#product-update-price').val();
+					data.product_id = $('#product-update-product-id').val();
+					break;
+				case 'product-delete':
+					data.product_id = $('#product-delete-product-id').val();
+					break;
+					
+					
+				case 'category-create':
+					data.parent_id = $('#category-create-parent-id').val();
+					data.name = $('#category-create-name').val();
+					data.description = $('#category-create-description').val();
+					break;
+				case 'category-read':
+					data.parent_id = $('#category-read-parent-id').val();
+					data.category_id = $('#category-read-category-id').val();
+					break;
+				case 'category-update':
+					data.name = $('#category-update-name').val();
+					data.description = $('#category-update-description').val();
+					data.category_id = $('#category-update-category-id').val();
+					break;
+				case 'category-delete':
+					data.category_id = $('#category-delete-category-id').val();
+					break;
+			}
+			
+			$.ajax({
+				'method': 'POST',
+				'url': 'index.php',
+				'data': data,
+				success: function(response){
+					console.log(response);	
+				}
+			});
+		})
+	});
+	</script>
+  
+</body>
+</html>
